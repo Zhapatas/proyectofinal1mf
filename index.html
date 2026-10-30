@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #202436;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .contenedor {
+            background: #303950;
+            padding: 30px;
+            border-radius: 15px;
+            width: 85%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #70a5ff;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            background: #70a5ff;
+            color: #172033;
+        }
+
+        button:hover {
+            background: #91b8ff;
+        }
+
+        #mensaje {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+    <h1>Cuestionario</h1>
+
+    <h3 id="pregunta"></h3>
+
+    <div id="opciones"></div>
+
+    <p id="mensaje"></p>
+</div>
+
+<script>
+
+const preguntas = [
+    {
+        pregunta: "¿Cuánto es 5 + 3?",
+        opciones: ["A) 6", "B) 8", "C) 10"],
+        correcta: "B"
+    },
+    {
+        pregunta: "¿Cuál es la capital de Uruguay?",
+        opciones: ["A) Montevideo", "B) Buenos Aires", "C) Santiago"],
+        correcta: "A"
+    },
+    {
+        pregunta: "¿Cuántos días tiene una semana?",
+        opciones: ["A) 5", "B) 6", "C) 7"],
+        correcta: "C"
+    },
+    {
+        pregunta: "¿Qué lenguaje estamos utilizando?",
+        opciones: ["A) Python", "B) Java", "C) HTML"],
+        correcta: "B"
+    },
+    {
+        pregunta: "¿Cuánto es 10 x 2?",
+        opciones: ["A) 20", "B) 15", "C) 25"],
+        correcta: "A"
+    }
+];
+
+let actual = 0;
+let correctas = 0;
+
+function mostrarPregunta() {
+    document.getElementById("mensaje").textContent = "";
+
+    document.getElementById("pregunta").textContent =
+        (actual + 1) + ". " + preguntas[actual].pregunta;
+
+    const opciones = document.getElementById("opciones");
+    opciones.innerHTML = "";
+
+    preguntas[actual].opciones.forEach((opcion, indice) => {
+        const boton = document.createElement("button");
+        boton.textContent = opcion;
+
+        boton.onclick = function() {
+            responder(["A", "B", "C"][indice]);
+        };
+
+        opciones.appendChild(boton);
+    });
+}
+
+function responder(respuesta) {
+    const mensaje = document.getElementById("mensaje");
+    const opciones = document.getElementById("opciones");
+
+    if (respuesta === preguntas[actual].correcta) {
+        correctas++;
+        mensaje.textContent = "¡Respuesta correcta!";
+        mensaje.style.color = "#70ff9b";
+    } else {
+        mensaje.textContent = "Respuesta incorrecta.";
+        mensaje.style.color = "#ff7777";
+    }
+
+    opciones.innerHTML = "";
+
+    const boton = document.createElement("button");
+
+    if (actual < preguntas.length - 1) {
+        boton.textContent = "Siguiente pregunta";
+        boton.onclick = function() {
+            actual++;
+            mostrarPregunta();
+        };
+    } else {
+        boton.textContent = "Ver resultados";
+        boton.onclick = mostrarResultado;
+    }
+
+    opciones.appendChild(boton);
+}
+
+function mostrarResultado() {
+    document.querySelector(".contenedor").innerHTML = `
+        <h1>¡Felicidades!</h1>
+        <h2>Contestaste bien ${correctas}/${preguntas.length}</h2>
+        <p>Gracias por participar.</p>
+        <button onclick="location.reload()">Volver a empezar</button>
+    `;
+}
+
+mostrarPregunta();
+
+</script>
+
+</body>
+</html>
